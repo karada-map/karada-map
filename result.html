@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>からだMAP｜診断結果</title>
+
+<style>
+  :root {
+    --primary-color: #5D4B33;
+    --bg-color: #F6F5EA;
+    --card-bg: #FFFFFF;
+    --text-color: #5D4B33;
+    --accent-brown: #5D4B33;
+    --label-brown: #8D734B;
+    --note-green: #8EA77A;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    margin: 0;
+    padding: 0;
+    background: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+
+  .app-wrapper {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logo-area { margin-bottom: 0px; }
+  .site-logo { width: 200px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
+
+  .container {
+    background: var(--card-bg);
+    width: 100%;
+    padding: 30px 24px;
+    border-radius: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+  }
+
+  h1 {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    color: var(--accent-brown);
+    font-weight: 700;
+    text-align: center;
+  }
+  .type-name {
+    display: block;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-top: 10px;
+    font-weight: 800;
+  }
+
+  .section { 
+    margin-bottom: 45px; 
+    text-align: center;
+  }
+
+  .subtitle-group {
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--label-brown);
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .subtitle::before, .subtitle::after {
+    content: "";
+    width: 20px;
+    height: 1px;
+    background: var(--label-brown);
+    margin: 0 10px;
+    opacity: 0.5;
+  }
+
+  .selected-issue {
+    display: block;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    margin-top: 10px;
+    font-weight: 800;
+  }
+
+  .summary-box {
+    background: #FAF9F2;
+    border-radius: 20px;
+    padding: 30px 20px;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 25px;
+  }
+  .summary-box ul { list-style: none; padding: 0; margin: 0; }
+  .summary-box li { line-height: 1.8; font-size: 0.95rem; margin-bottom: 15px; }
+  .summary-box li:last-child { margin-bottom: 0; }
+
+  .note-button {
+    display: inline-block;
+    padding: 14px 35px;
+    background-color: var(--note-green);
+    color: #FFFFFF !important;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 0 #7A9168;
+    transition: all 0.2s;
+  }
+
+  .footer-text { font-size: 0.8rem; color: #A09E94; line-height: 1.6; margin-top: 20px; }
+
+  /* ▼ 追加：戻りリンク */
+  .back-link {
+    text-align: center;
+    margin-top: 25px;
+  }
+  .back-link a {
+    color: var(--label-brown);
+    font-size: 0.9rem;
+    text-decoration: underline;
+    opacity: 0.85;
+  }
+  .back-link a:hover {
+    opacity: 1;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="app-wrapper">
+  <div class="logo-area">
+    <img src="logo.png" alt="からだMAPロゴ" class="site-logo">
+  </div>
+
+  <div class="container">
+    <h1 id="typeNameDisplay">
+      あなたの体質<br>
+      <span class="type-name">読み込み中...</span>
+    </h1>
+
+    <div class="section">
+      <div class="subtitle-group">
+        <div class="subtitle">体質の特徴</div>
+      </div>
+      <div class="summary-box" id="summary"></div>
+
+      <p style="font-size: 0.85rem; margin-bottom: 20px; line-height: 1.6;">
+        あなたに合うケアや暮らしのヒントを<br>note記事で詳しく紹介しています。
+      </p>
+      <a id="typeLink" href="#" class="note-button">noteで詳細を見る</a>
+    </div>
+
+    <div class="section">
+      <div class="subtitle-group">
+        <div class="subtitle">今回選んだ悩み</div>
+        <div id="issueNameDisplay" class="selected-issue"></div>
+      </div>
+
+      <p style="font-size: 0.85rem; margin-bottom: 20px; line-height: 1.6;">
+        この悩みについての考え方やケアのヒントは<br>note記事でご紹介しています。
+      </p>
+      <a id="issueLink" href="#" class="note-button">noteで詳細を見る</a>
+
+      <!-- ▼ 追加：診断ページに戻る -->
+      <p class="back-link">
+        <a href="index.html">診断ページに戻る</a>
+      </p>
+    </div>
+
+    <div class="section" style="margin-bottom: 0;">
+      <p class="footer-text">
+        からだMAPについて<br>
+        この診断は“体質の方向性”を整理する<br>簡易レポートです。<br>
+        医療行為や病気の診断ではありません。
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const type = params.get("type") || "wood";
+const issue = params.get("issue") || "none";
+
+const typeNames = { cold: "冷えタイプ", water: "むくみタイプ", earth: "胃腸タイプ", wood: "神経敏感タイプ", fire: "巡り停滞タイプ" };
+const summaries = {
+  cold: ["火（温める力）が控えめで、<br>熱をつくるのがやや苦手な体質。","外気や気温差の影響で<br>巡りが乱れやすい傾向。","手足の冷えがサインとして<br>出やすいのが特徴です。","巡りが落ちると疲れ・むくみ・<br>胃腸の揺れに直結します。","火が整うと全体が安定しやすいタイプ。"],
+  water: ["水（巡り・排出）が<br>滞りやすい傾向のある体質。","水分をため込みやすく、<br>むくみが出やすいタイプ。","気圧変化や同じ姿勢が続く日は<br>重さが出やすいでしょう。","巡りが乱れると疲れにも直結。","水の流れが整うと軽さが戻るタイプ。"],
+  earth: ["土（消化・吸収）が揺れやすい、<br>繊細な胃腸タイプ。","冷たいもの・食べすぎ・<br>ストレスの影響を受けやすい。","乱れるとお腹の張り・重さ・<br>疲れが出やすい傾向。","胃腸が揺れると全身の<br>エネルギーが落ちやすい。","負担を減らす工夫が安定につながります。"],
+  wood: ["木（反応・調整）が<br>過敏に働きやすいタイプ。","神経が鋭く、<br>気が揺れやすい傾向にあります。","気圧・寝不足・ストレスで<br>緊張が出やすいでしょう。","不調サインが外に出やすい反面、<br>気づく力としての敏感さを持ちます。","刺激を減らし落ち着ける環境が<br>安定につながるはずです。"],
+  fire: ["巡り（血・リンパ）が<br>滞りやすい体質です。","同じ姿勢・緊張・冷えが重なると<br>固まりやすい傾向。","肩張り・だるさが<br>サインとして出やすい。","巡りが整うと軽さが戻りやすい。","小さな調整が効果的なタイプ。"]
+};
+
+const issueNames = { hie: "冷え", mukumi: "むくみ", ichou: "胃腸", tsukare: "疲れ", zutsu: "頭痛", katakori: "首・肩こり", seiritsu: "生理痛", none: "特になし" };
+const typeLinks = { cold: "https://note.com/karadamap/n/n9f94e91c1351", water: "https://note.com/karadamap/n/n97a346504ab3", earth: "https://note.com/karadamap/n/n1424ceb35e8c", wood: "https://note.com/karadamap/n/nf2584cf22741", fire: "https://note.com/karadamap/n/n85d8866a70c6" };
+const issueLinks = { hie: "https://note.com/karadamap/n/naa09e103c02c", mukumi: "https://note.com/karadamap/n/n1a9527c45798", ichou: "https://note.com/karadamap/n/nd09f57ef6b50", tsukare: "https://note.com/karadamap/n/n0fb8889ca9c1", zutsu: "https://note.com/karadamap/n/n10eccfc1ad8b", katakori: "https://note.com/karadamap/n/n62e0e36d9d68", seiritsu: "https://note.com/karadamap/n/nf90cd5240b9e", none: "https://note.com/karadamap/n/n8d3a7ae4ce25" };
+
+document.getElementById("typeNameDisplay").innerHTML = `あなたの体質<br><span class="type-name">${typeNames[type]}</span>`;
+document.getElementById("summary").innerHTML = `<ul>${summaries[type].map(x => `<li>${x}</li>`).join("")}</ul>`;
+document.getElementById("issueNameDisplay").textContent = issueNames[issue];
+document.getElementById("typeLink").href = typeLinks[type];
+document.getElementById("issueLink").href = issueLinks[issue];
+</script>
+
+</body>
+</html>
+

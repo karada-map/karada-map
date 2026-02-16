@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>からだMAP｜無料診断</title>
+
+<!-- OGP -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="からだMAP｜無料体質診断">
+<meta property="og:description" content="あなたの体質タイプを無料で診断します。">
+<meta property="og:url" content="https://karada-map.github.io/karada-map/">
+<meta property="og:image" content="https://karada-map.github.io/karada-map/ogp.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="からだMAP｜無料体質診断">
+<meta name="twitter:description" content="あなたの体質タイプを無料で診断します。">
+<meta name="twitter:image" content="https://karada-map.github.io/karada-map/ogp.jpg">
+
+<link rel="icon" href="logo.png">
+
+<style>
+  :root {
+    --primary-color: #5D4B33; 
+    --accent-orange: #E49F17;
+    --bg-color: #F6F5EA;
+    --card-bg: #FFFFFF;
+    --text-color: #5D4B33;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    margin: 0;
+    padding: 0;
+    background: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .app-wrapper {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logo-area { 
+    margin-bottom: 0px; 
+    z-index: 10; 
+  }
+
+  .site-logo { 
+    width: 200px;
+    height: auto; 
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); 
+  }
+
+  .container {
+    background: var(--card-bg);
+    width: 100%;
+    padding: 30px 24px 30px; 
+    border-radius: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+    line-height: 1.4;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+    font-weight: 700;
+  }
+
+  .sub-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-color); 
+    display: block;
+    margin-top: 5px;
+  }
+
+  .section { margin-bottom: 35px; }
+
+  label.title {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #8D734B; 
+  }
+
+  .hint-text {
+    font-size: 0.85rem;
+    color: #A09E94;
+    margin: -8px 0 15px;
+  }
+
+  .select-group {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: nowrap;
+  }
+
+  select {
+    padding: 12px 2px;
+    border: 2px solid #F0EFE0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    background: #FFF;
+    color: var(--text-color);
+    flex: 1;
+    min-width: 0;
+    appearance: none;
+    outline: none;
+  }
+
+  select:focus {
+    border-color: #E6E4D9;
+    box-shadow: none;
+  }
+
+  .radio-group {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .radio-item {
+    display: block;
+    padding: 15px;
+    border-radius: 12px;
+    background: #FAF9F2;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-size: 1.05rem;
+    text-align: center;
+  }
+
+  .radio-item input[type="radio"] { display: none; }
+
+  .radio-item:has(input:checked) {
+    background: #FFF9ED;
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
+    font-weight: 700;
+  }
+
+  .diagnose-button {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    background-color: var(--accent-orange);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 16px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    box-shadow: 0 6px 0 #C98B14;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+
+  .footer-text {
+    font-size: 0.75rem;
+    color: #A09E94;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="app-wrapper">
+  <div class="logo-area">
+    <img src="logo.png" alt="からだMAPロゴ" class="site-logo">
+  </div>
+
+  <div class="container">
+    <h1>
+      からだMAP
+      <span class="sub-title">無料診断</span>
+    </h1>
+
+    <div class="section">
+      <label class="title">生年月日</label>
+      <div class="select-group">
+        <select id="year"></select>
+        <select id="month"></select>
+        <select id="day"></select>
+      </div>
+    </div>
+
+    <div class="section">
+      <label class="title">今回の悩み</label>
+      <p class="hint-text">今、いちばん気になるものを1つ選んでください</p>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="issue" value="hie">冷え</label>
+        <label class="radio-item"><input type="radio" name="issue" value="mukumi">むくみ</label>
+        <label class="radio-item"><input type="radio" name="issue" value="ichou">胃腸</label>
+        <label class="radio-item"><input type="radio" name="issue" value="tsukare">疲れ</label>
+        <label class="radio-item"><input type="radio" name="issue" value="zutsu">頭痛</label>
+        <label class="radio-item"><input type="radio" name="issue" value="katakori">首・肩こり</label>
+        <label class="radio-item"><input type="radio" name="issue" value="seiritsu">生理痛</label>
+        <label class="radio-item"><input type="radio" name="issue" value="none">特になし</label>
+      </div>
+    </div>
+
+    <button class="diagnose-button" onclick="startDiagnosis()">
+      無料で診断する
+    </button>
+
+    <p class="footer-text">
+  入力された情報は保存されず、<br>
+  診断のためだけに使用されます。<br>
+  この診断は体質の方向性を整理する簡易レポートです。<br>
+  医療行為や病気の診断ではありません。
+</p>
+
+  </div>
+</div>
+
+<script>
+  const yearSel = document.getElementById("year");
+  const monthSel = document.getElementById("month");
+  const daySel = document.getElementById("day");
+
+  function init() {
+  for (let y = 1910; y <= 2035; y++) {
+    yearSel.add(new Option(y + "年", y));
+  }
+
+  for (let m = 1; m <= 12; m++) {
+    monthSel.add(new Option(m + "月", m));
+  }
+
+  yearSel.value = 1990;
+  updateDays();
+}
+
+  function updateDays() {
+    const year = parseInt(yearSel.value);
+    const month = parseInt(monthSel.value);
+    const beforeDay = daySel.value;
+    daySel.innerHTML = "";
+    const lastDay = new Date(year, month, 0).getDate();
+    for (let d = 1; d <= lastDay; d++) daySel.add(new Option(d + "日", d));
+    if (beforeDay && beforeDay <= lastDay) daySel.value = beforeDay;
+  }
+
+  yearSel.addEventListener("change", updateDays);
+  monthSel.addEventListener("change", updateDays);
+  init();
+
+
+  // ==========================
+  // 🔥 五行タイプ判定ロジック
+  // ==========================
+
+  function getType(year, month, day) {
+
+  const sum = year + month + day;
+
+  const mod = sum % 5;
+
+  if (mod === 0) return "wood";   // 神経敏感
+  if (mod === 1) return "fire";   // 巡り停滞
+  if (mod === 2) return "earth";  // 胃腸
+  if (mod === 3) return "cold";   // 金 → 冷えタイプに統一
+  if (mod === 4) return "water";  // むくみ
+}
+
+
+  // ==========================
+  // 🚀 診断開始
+  // ==========================
+
+  function startDiagnosis() {
+    const issue = document.querySelector("input[name='issue']:checked");
+    if (!issue) {
+      alert("悩みを選択してください。");
+      return;
+    }
+
+    const y = parseInt(yearSel.value);
+    const m = parseInt(monthSel.value);
+    const d = parseInt(daySel.value);
+
+    const type = getType(y, m, d);
+
+    window.location.href = `result.html?type=${type}&issue=${issue.value}`;
+  }
+</script>
+
+
+</body>
+</html>
